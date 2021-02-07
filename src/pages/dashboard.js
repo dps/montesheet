@@ -1,6 +1,5 @@
 import React from "react";
 import DashboardSection from "./../components/DashboardSection";
-import { requireAuth } from "./../util/auth.js";
 
 function DashboardPage(props) {
   return (
@@ -15,4 +14,4 @@ function DashboardPage(props) {
   );
 }
 
-export default requireAuth(DashboardPage);
+export default DashboardPage;
