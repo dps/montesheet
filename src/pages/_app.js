@@ -9,10 +9,7 @@ function App(props) {
           <>
             <Navbar
               color="default"
-              logo="https://uploads.divjoy.com/logo.svg"
-              logoInverted="https://uploads.divjoy.com/logo-white.svg"
             />
-
             <DashboardPage/>
           </>
     </ThemeProvider>

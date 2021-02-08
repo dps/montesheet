@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Section from "./Section";
 import AppBar from "@material-ui/core/AppBar";
 import Container from "@material-ui/core/Container";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -33,7 +32,7 @@ function Navbar(props) {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   return (
-    <Section bgColor={props.color} size="auto">
+    <Container>
       <AppBar position="static" color="transparent" elevation={0}>
         <Container disableGutters={true}>
           <Toolbar>
@@ -45,7 +44,6 @@ function Navbar(props) {
                 style={{ opacity: 0.6 }}
               >
                 {darkMode.value && <NightsStayIcon />}
-
                 {!darkMode.value && <WbSunnyIcon />}
               </IconButton>
           </Toolbar>
@@ -68,13 +66,12 @@ function Navbar(props) {
               style={{ opacity: 0.6 }}
             >
               {darkMode.value && <NightsStayIcon />}
-
               {!darkMode.value && <WbSunnyIcon />}
             </IconButton>
           </ListItem>
         </List>
       </Drawer>
-    </Section>
+    </Container>
   );
 }
 
