@@ -118,7 +118,7 @@ function SpreadsheetItems(props) {
         while (matches = regex.exec(templateFormula)) {
             console.log("matches", matches, computedFormula, pos);
             // Add the next bit that isn't a cell name
-            computedFormula += templateFormula.substr(pos, matches.index);
+            computedFormula += templateFormula.substr(pos, matches.index - pos);
 
             // Then grab the cell name and increment it by one row (filling DOWN).
             computedFormula += matches[1] + (Number(matches[2]) + 1);
