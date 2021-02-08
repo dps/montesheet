@@ -13,7 +13,7 @@ import useMousetrap from "react-hook-mousetrap"
 
 const toposort = require('toposort');
 
-window.values = {'A1': 1, 'A2': '=A1+1'};
+window.values = {};
 
 const useStyles = makeStyles((theme) => ({
   paperItems: {
@@ -36,13 +36,13 @@ function SpreadsheetItems(props) {
 
   const formulaFieldRef = createRef();
 
-  const defaultItems = {'A1': 1, 'A2': '=A1+1'};
+  const defaultItems = {};
 
   const [cells, setCells] = useState(defaultItems);
   const [errorCellText, setErrorCellText] = useState({});
   
-  const [editCell, setEditCell] = useState("A2");
-  const [selection, setSelection] = useState("A2:A5");
+  const [editCell, setEditCell] = useState("A1");
+  const [selection, setSelection] = useState("A1:A1");
 
   const toposortCells = () => {
     var graph = [];
