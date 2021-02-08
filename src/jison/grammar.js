@@ -84,8 +84,7 @@ performAction: function anonymous(yytext, yyleng, yylineno, yy, yystate /* actio
 var $0 = $$.length - 1;
 switch (yystate) {
 case 1:
- typeof console !== 'undefined' ? console.log($$[$0-1]) : console.log($$[$0-1]);
-          return $$[$0-1]; 
+ return $$[$0-1]; 
 break;
 case 2:
 this.$ = $$[$0-2]+$$[$0];
@@ -117,7 +116,7 @@ case 10:
 this.$ = $$[$0-1];
 break;
 case 11:
-this.$ = Number(window.values[yytext]);console.log("cell " + window.values[yytext]);
+this.$ = Number(window.values[yytext]);
 break;
 case 12:
 this.$ = Number(yytext);
@@ -642,7 +641,7 @@ case 16:return 'INVALID'
 break;
 }
 },
-rules: [/^(?:\s+)/,/^(?:=)/,/^(?:[0-9]+(\.[0-9]+)?\b)/,/^(?:[A-Z][0-9])/,/^(?:\*)/,/^(?:\/)/,/^(?:-)/,/^(?:\+)/,/^(?:\^)/,/^(?:!)/,/^(?:%)/,/^(?:\()/,/^(?:\))/,/^(?:PI\b)/,/^(?:E\b)/,/^(?:$)/,/^(?:.)/],
+rules: [/^(?:\s+)/,/^(?:=)/,/^(?:[0-9]+(\.[0-9]+)?\b)/,/^(?:[A-Z][0-9]+)/,/^(?:\*)/,/^(?:\/)/,/^(?:-)/,/^(?:\+)/,/^(?:\^)/,/^(?:!)/,/^(?:%)/,/^(?:\()/,/^(?:\))/,/^(?:PI\b)/,/^(?:E\b)/,/^(?:$)/,/^(?:.)/],
 conditions: {"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],"inclusive":true}}
 });
 return lexer;

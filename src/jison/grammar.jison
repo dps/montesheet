@@ -8,7 +8,7 @@
 \s+                   /* skip whitespace */
 "="                   /* skip = */
 [0-9]+("."[0-9]+)?\b  return 'NUMBER'
-[A-Z][0-9]            return 'CELL'
+[A-Z][0-9]+           return 'CELL'
 "*"                   return '*'
 "/"                   return '/'
 "-"                   return '-'
@@ -40,8 +40,7 @@
 
 expressions
     : e EOF
-        { typeof console !== 'undefined' ? console.log($1) : print($1);
-          return $1; }
+        { return $1; }
     ;
 
 e
@@ -66,7 +65,7 @@ e
     | '(' e ')'
         {$$ = $2;}
     | CELL
-      {$$ = Number(window.values[yytext]);console.log("cell " + window.values[yytext]);}
+      {$$ = Number(window.values[yytext]);}
     | NUMBER
         {$$ = Number(yytext);}
     | E
