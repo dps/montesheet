@@ -39,7 +39,7 @@ function SpreadsheetItems(props) {
   const defaultItems = {};
 
   const [cells, setCells] = useState(defaultItems);
-  const [errorCellText, setErrorCellText] = useState({});
+  const [errorCellText] = useState({});
   
   const [editCell, setEditCell] = useState("A1");
   const [selection, setSelection] = useState("A1:A1");
@@ -60,7 +60,7 @@ function SpreadsheetItems(props) {
                 graph.push([matches[match], item]);
             }
 
-            if (edgesAdded == 0) {
+            if (edgesAdded === 0) {
                 // This cell has no dependencies, but it is a formula so
                 // compute its value right now. (e.g. pure math)
                 try {
@@ -115,7 +115,7 @@ function SpreadsheetItems(props) {
         var computedFormula = "";
         var matches;
         var pos = 0;
-        while (matches = regex.exec(templateFormula)) {
+        while ((matches = regex.exec(templateFormula))) {
             console.log("matches", matches, computedFormula, pos);
             // Add the next bit that isn't a cell name
             computedFormula += templateFormula.substr(pos, matches.index - pos);
@@ -221,11 +221,9 @@ const handleShiftDirKey = (v, h) => {
     <TextField inputRef={formulaFieldRef} key={"formula-" + editCell}
       fullWidth id="filled-basic" label="Formula" variant="filled" defaultValue={cells[editCell] || ""}
       onKeyDown={formulaKeyDown} autoFocus
+      autoComplete="off"
       helperText={errorCellText[editCell] || " "}
-    InputProps={{
-        form: {
-            autocomplete: 'off',
-        },
+      InputProps={{
         startAdornment: <InputAdornment position="start">{editCell}</InputAdornment>,
       }}
     />

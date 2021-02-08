@@ -1,7 +1,6 @@
 import React from "react";
 import Navbar from "./../components/Navbar";
 import DashboardPage from "./dashboard";
-import NotFoundPage from "./not-found.js";
 import { ThemeProvider } from "./../util/theme.js";
 
 function App(props) {
