@@ -1,5 +1,9 @@
 
 ## 🧮 Spreadsheet
+
+A simple proof-of-concept spreadsheet in React with Material-UI.
+
+
 To run
 ```
 npm install
