@@ -1,5 +1,16 @@
 
 ## 🧮 Spreadsheet
+
+A simple proof-of-concept spreadsheet in React with Material-UI.
+
+To re-generate the parser from `grammar.jison`
+```
+npm install jison -g
+cd src/jison
+jison grammar.jison
+```
+Which writes the file `grammar.js` in the same directory.
+
 To run
 ```
 npm install
