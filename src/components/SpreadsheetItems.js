@@ -14,6 +14,8 @@ import useMousetrap from "react-hook-mousetrap"
 const toposort = require('toposort');
 
 window.values = {};
+const rowCount = 20;
+const colCount = 21;
 
 const useStyles = makeStyles((theme) => ({
   paperItems: {
@@ -100,23 +102,19 @@ function SpreadsheetItems(props) {
   }
 
   const fillDown = () => {
-      console.log("fillDown");
       const startCell = selection.split(":")[0];
       const endCell = selection.split(":")[1];
       const startParts = cellParts(startCell);
       const endParts = cellParts(endCell);
 
       var templateFormula = cells[startCell];
-      console.log("templateFormula", templateFormula);
 
       for (var i = startParts[1] + 1; i <= endParts[1]; i++) {
-          console.log(i);
         const regex = /([A-Z])([0-9]+)/g;
         var computedFormula = "";
         var matches;
         var pos = 0;
         while ((matches = regex.exec(templateFormula))) {
-            console.log("matches", matches, computedFormula, pos);
             // Add the next bit that isn't a cell name
             computedFormula += templateFormula.substr(pos, matches.index - pos);
 
@@ -127,7 +125,6 @@ function SpreadsheetItems(props) {
         // copy over anything left at the end of the template after all matches.
         computedFormula += templateFormula.substring(pos);
 
-        console.log("computed", computedFormula);
         cells[startParts[0] + i] = computedFormula;
         templateFormula = computedFormula;
       }
@@ -233,28 +230,26 @@ const handleShiftDirKey = (v, h) => {
         <TableHead>
           <TableRow>
             <TableCell>🧮</TableCell>
-            {[...Array(21).keys()].map((i) => 
+            {[...Array(colCount).keys()].map((i) => 
                 <TableCell align="center">{String.fromCharCode('A'.charCodeAt(0) + i)}</TableCell>)
             }            
           </TableRow>
         </TableHead>
         <TableBody>
-          {[...Array(20).keys()].map((r, row) => (
+          {[...Array(rowCount).keys()].map((r, row) => (
             <TableRow key={"row-" + row}>
               <TableCell component="th" scope="row" key={"rowl-" + row}>
                 {row + 1}
               </TableCell>
-              {[...Array(21).keys()].map((i) => {
+              {[...Array(colCount).keys()].map((i) => {
                   const cellName = String.fromCharCode('A'.charCodeAt(0) + i) + (row + 1);
                   return <TableCell 
                       className={cellName === editCell ? classes.outlined : inSelection(cellName) ? classes.selectedCell : classes.tableCell}
                       key={"cell-" + cellName + "-" + (cells[cellName] || '')}
                       onClick={() => {setEditCell(cellName);setSelection(cellName + ":" + cellName);}}
                       align="right">{window.values[cellName] || cells[cellName] || ''}
-                      
-                      </TableCell>;}
-                  )
-              }
+                      </TableCell>;
+                })}
             </TableRow>
           ))}
         </TableBody>
