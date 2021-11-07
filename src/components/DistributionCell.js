@@ -6,27 +6,31 @@ import { NormalDistribution, UniformDistribution } from "../util/distributions";
 
 function DistributionCell(props) {
 
-  const distribution = props.type === "uniform" ? new UniformDistribution(props) : new NormalDistribution(props);
+  const distribution = props.distribution || (props.type === "uniform" ? new UniformDistribution(props) : new NormalDistribution(props));
   
+  if (distribution.exec) {
+    distribution.exec();
+    console.log(distribution.val());
+  }
+
   return (
-    distribution && distribution.monteVals && distribution.monteVals.length > 0 ?
-    <>
-        <TableCell><Tooltip title={
+    distribution ?
+        <><Tooltip title={
             <>
-                    <p>min: {distribution.monteMin.toPrecision(4)}</p>
-                    <p>p10: {(distribution.monteVals[Math.floor(distribution.samples / 10)]).toPrecision(4)}</p>
-                    <p>μ: {distribution.monteMean.toPrecision(4)}</p>
-                    <p>p90: {(distribution.monteVals[Math.floor(9 * distribution.samples / 10)]).toPrecision(4)}</p>
-                    <p>max: {distribution.monteMax.toPrecision(4)}</p>
+                    <p>min: {distribution.val().monteMin.toPrecision(4)}</p>
+                    <p>p10: {(distribution.val().monteVals[Math.floor(distribution.val().samples / 10)]).toPrecision(4)}</p>
+                    <p>μ: {distribution.val().monteMean.toPrecision(4)}</p>
+                    <p>p90: {(distribution.val().monteVals[Math.floor(9 * distribution.val().samples / 10)]).toPrecision(4)}</p>
+                    <p>max: {distribution.val().monteMax.toPrecision(4)}</p>
             </>
 
-        }><div><b>{props.type}</b>{distribution.paramStr}<br/>
-        <Sparklines data={distribution.histogram}  svgWidth={180} svgHeight={50} width={100} height={50} margin={5} min={props.min}>
+        }><div><b>{props.distribution.type}</b>{distribution.val().paramStr} μ: {distribution.val().monteMean.toPrecision(4)}<br/>
+        <Sparklines data={distribution.val().histogram}  svgWidth={180} svgHeight={50} width={100} height={50} margin={5} min={distribution.val().monteMin}>
             <SparklinesLine color="blue" />
         </Sparklines></div></Tooltip>
-        </TableCell>
+        </>
         
-    </> : null);
+    : null);
 }
 
 export default DistributionCell;

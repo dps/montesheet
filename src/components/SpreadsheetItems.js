@@ -7,9 +7,10 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import { makeStyles } from "@material-ui/core/styles";
-import { parse } from "../jison/grammar";
+import { parse } from "../util/parser";
 import { InputAdornment, TextField } from "@material-ui/core";
 import useMousetrap from "react-hook-mousetrap"
+import DistributionCell from "./DistributionCell";
 
 const toposort = require('toposort');
 
@@ -66,7 +67,11 @@ function SpreadsheetItems(props) {
                 // This cell has no dependencies, but it is a formula so
                 // compute its value right now. (e.g. pure math)
                 try {
-                  window.values[item] = parse(formula);
+                  var res = parse(formula);
+                  if (res.paramStr) {
+                    res.exec();
+                  }
+                  window.values[item] = res;
                   delete errorCellText[item];
                 } catch (err) {
                   errorCellText[item] = err.message;
@@ -88,8 +93,16 @@ function SpreadsheetItems(props) {
           if (formula.startsWith("=")) {
               try {
                 const val = parse(cells[cell]);
-                window.values[cell] = val;
-                if (isNaN(val)) {
+                console.log(val);
+                if (val.paramStr) {
+                  console.log("NORMAL FORMULA");
+                  val.exec();
+                  console.log(val.monteMean);
+                  window.values[cell] = val;
+                } else {
+                  window.values[cell] = val;
+                }
+                if (!val.paramStr && isNaN(val)) {
                     window.values[cell] = "NAN";
                 }
                 delete errorCellText[cell];
@@ -212,6 +225,13 @@ const handleShiftDirKey = (v, h) => {
     formulaFieldRef.current.focus();
 };
 
+const renderDistOrVal = (cellName) => {
+  if (window.values[cellName] && window.values[cellName].paramStr) {
+    return <DistributionCell distribution={window.values[cellName]} />;
+  }
+  return window.values[cellName] || cells[cellName] || '';
+}
+
   return (
     <>
     {toposortCells()}
@@ -247,7 +267,7 @@ const handleShiftDirKey = (v, h) => {
                       className={cellName === editCell ? classes.outlined : inSelection(cellName) ? classes.selectedCell : classes.tableCell}
                       key={"cell-" + cellName + "-" + (cells[cellName] || '')}
                       onClick={() => {setEditCell(cellName);setSelection(cellName + ":" + cellName);}}
-                      align="right">{window.values[cellName] || cells[cellName] || ''}
+                      align="right">{renderDistOrVal(cellName)}
                       </TableCell>;
                 })}
             </TableRow>
