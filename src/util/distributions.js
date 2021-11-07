@@ -136,102 +136,51 @@ export function combineDistributions(a, b, label, combFunc) {
     };
 }
 
-export function ND(props) {
-  var monteMin = Number.MAX_VALUE;
-  var monteMax = Number.MIN_VALUE;
-  var monteVals = [];
-  var histogram = [];
-  var monteMean = 0.0;
-  var isCalculated = false;
 
-  const type = "normal";
-  const mean = props.mean || 0.0;
-  const stddev = props.stddev || 1.0;
-  const paramStr = `(${mean},${stddev})`;
-  const distribution = gaussian(mean, stddev*stddev);
 
-  const slices = props.slices || 20;
-  const samples = props.samples || 1000 * slices;
+export function poisson(props) {
+  return GenericDistribution(
+    { type: "poisson",
+      paramStr: `(${props.mean})`, 
+      sample: () => {
+        var mean = props.mean;
 
-  const sample = () => {
-    return distribution.ppf(Math.random());
-  };
-
-  const zeros = (n) => {
-    return Array(n).fill(0);
-  };
-
-  const monteCarlo = () => {
-    console.log("Monte Carlo");
-    var values = [];
-    var sliceData = zeros(slices);
-    console.log(sliceData);
-    var min = Number.MAX_VALUE;
-    var max = Number.MIN_VALUE;
-    var sum = 0.0;
-    for (let i = 0; i < samples; i++) {
-      const x = sample();
-      sum += x;
-      values.push(x);
-      if (x < min) {
-        min = x;
-      } else if (x > max) {
-        max = x;
+        var L = Math.exp(-mean);
+        var p = 1.0;
+        var k = 0;
+        
+        do {
+            k++;
+            p *= Math.random();
+        } while (p > L);
+        
+        return k - 1;
       }
-    }
-    monteMax = max;
-    monteMin = min;
-    values = values.sort();
-    monteVals = values;
-    monteMean = sum / samples;
-    console.log("max", max);
-    console.log("min", min);
-    const sliceWidth = (max - min) / (1.0 * slices);
-    console.log("sliceWidth", sliceWidth);
-
-    for (let i = 0; i < values.length; i++) {
-      const x = values[i];
-      const index = Math.floor((x - min) / sliceWidth);
-      if (index < slices) {
-        sliceData[index]++;
-      }
-    }
-
-    histogram = sliceData;
-    
-  };
-  
-  const exec = () => {
-    if (!isCalculated) {
-      monteCarlo();
-      isCalculated = true;
-    }
-  };
-
-  const val = () => {
-    exec();
-    return {
-      monteMin,
-      monteMax,
-      monteVals,
-      histogram,
-      monteMean,
-      slices,
-      samples,
-      paramStr,
-      exec
-    }
-  };
-  
-    return {
-      val,
-      paramStr,
-      type,
-      exec
-    };
+      , ...props});
 }
 
-export function UF(props) {
+export function normal(props) {
+  const generator = gaussian(props.mean, props.stddev*props.stddev);
+  return GenericDistribution(
+    { type: "normal",
+      paramStr: `(${props.mean}, ${props.stddev})`, 
+      sample: () => {
+        return generator.ppf(Math.random());
+      }
+      , ...props});
+}
+
+export function uniform(props) {
+  return GenericDistribution(
+    { type: "uniform",
+      paramStr: `(${props.min}, ${props.max})`, 
+      sample: () => {
+        return Math.random() * (props.max - props.min) + props.min
+      }
+      , ...props});
+}
+
+export function GenericDistribution(props) {
   var monteMin = Number.MAX_VALUE;
   var monteMax = Number.MIN_VALUE;
   var monteVals = [];
@@ -239,16 +188,16 @@ export function UF(props) {
   var monteMean = 0.0;
   var isCalculated = false;
 
-  const type = "uniform";
+  const type = props.type;
   const min = props.min || 0.0;
   const max = props.max || 1.0;
-  const paramStr = `(${min},${max})`;
+  const paramStr = props.paramStr;
 
   const slices = props.slices || 20;
   const samples = props.samples || 1000 * slices;
 
   const sample = () => {
-    return Math.random() * (max - min) + min;
+    return props.sample();
   };
 
   const zeros = (n) => {
@@ -275,7 +224,7 @@ export function UF(props) {
     }
     monteMax = max;
     monteMin = min;
-    values = values.sort();
+    values = values.sort((a, b) => a - b);
     monteVals = values;
     monteMean = sum / samples;
     console.log("max", max);
@@ -325,87 +274,7 @@ export function UF(props) {
     };
 }
 
-export function NormalDistribution(props) {
-    const [monteMin, setMonteMin] = useState(Number.MAX_VALUE);
-    const [monteMax, setMonteMax] = useState(Number.MIN_VALUE);
-    const [monteVals, setMonteVals] = useState([]);
-    const [histogram, setHistogram] = useState([]);
-    const [monteMean, setMonteMean] = useState(0.0);
-    const mean = props.mean || 0.0;
-    const stddev = props.stddev || 1.0;
-    const paramStr = `(${mean},${stddev})`;
-    const distribution = gaussian(mean, stddev*stddev);
-  
-    const slices = props.slices || 20;
-    const samples = props.samples || 1000 * slices;
-  
-    const sample = () => {
-      return distribution.ppf(Math.random());
-    };
-  
-    const zeros = (n) => {
-      return Array(n).fill(0);
-    };
-  
-    const monteCarlo = () => {
-      console.log("Monte Carlo");
-      var values = [];
-      var sliceData = zeros(slices);
-      console.log(sliceData);
-      var min = Number.MAX_VALUE;
-      var max = Number.MIN_VALUE;
-      var sum = 0.0;
-      for (let i = 0; i < samples; i++) {
-        const x = sample();
-        sum += x;
-        values.push(x);
-        if (x < min) {
-          min = x;
-        } else if (x > max) {
-          max = x;
-        }
-      }
-      setMonteMax(max);
-      setMonteMin(min);
-      values = values.sort();
-      setMonteVals(values);
-      setMonteMean(sum / samples);
-      console.log("max", max);
-      console.log("min", min);
-      const sliceWidth = (max - min) / (1.0 * slices);
-      console.log("sliceWidth", sliceWidth);
-  
-      for (let i = 0; i < values.length; i++) {
-        const x = values[i];
-        const index = Math.floor((x - min) / sliceWidth);
-        if (index < slices) {
-          sliceData[index]++;
-        }
-      }
-  
-      setHistogram(sliceData);
-      
-    };
-    
-    const mountEffect = useEffect(() => {
-      monteCarlo();
-    }, [props]);
-  
-    return useMemo(() => {
-      return {
-        monteMin,
-        monteMax,
-        monteVals,
-        histogram,
-        monteMean,
-        slices,
-        samples,
-        paramStr
-      };
-    }, [monteMin, monteMax, monteVals, histogram, monteMean]);
-}
-
-export function UniformDistribution(props) {
+export function ReactDistribution(props) {
   const [monteMin, setMonteMin] = useState(Number.MAX_VALUE);
   const [monteMax, setMonteMax] = useState(Number.MIN_VALUE);
   const [monteVals, setMonteVals] = useState([]);

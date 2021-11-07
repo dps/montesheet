@@ -2,11 +2,10 @@ import React, { useState, useEffect } from "react";
 import TableCell from '@material-ui/core/TableCell';
 import { Tooltip } from "@material-ui/core";
 import { Sparklines, SparklinesLine } from 'react-sparklines';
-import { NormalDistribution, UniformDistribution } from "../util/distributions";
 
 function DistributionCell(props) {
 
-  const distribution = props.distribution || (props.type === "uniform" ? new UniformDistribution(props) : new NormalDistribution(props));
+  const distribution = props.distribution;
   
   if (distribution.exec) {
     distribution.exec();

@@ -2,7 +2,6 @@ import React from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import SpreadsheetItems from "./SpreadsheetItems";
-import DistributionCell from "./DistributionCell";
 
 function DashboardSection(props) {
 

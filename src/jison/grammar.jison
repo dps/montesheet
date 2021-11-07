@@ -23,6 +23,7 @@
 "E"                   return 'E'
 "normal"              return 'NORMAL'
 "uniform"             return 'UNIFORM'
+"poisson"             return 'POISSON'
 "choose"              return 'CHOOSE'
 <<EOF>>               return 'EOF'
 .                     return 'INVALID'
@@ -77,9 +78,11 @@ e
     | PI
         {$$ = Math.PI;}
     | NORMAL '(' e ',' e ')'
-        {   $$ = new yy.distributions.ND({mean: $3,stddev: $5});}
+        {   $$ = new yy.distributions.normal({mean: $3,stddev: $5});}
     | UNIFORM '(' e ',' e ')'
-        {   $$ = new yy.distributions.UF({min: $3,max: $5});}
+        {   $$ = new yy.distributions.uniform({min: $3,max: $5});}
+    | POISSON '(' e ')'
+        {   $$ = new yy.distributions.poisson({mean: $3});}
     | CHOOSE '(' e ',' e ')'
         {   $$ = new yy.distributions.choose($3,$5);}
 ;
