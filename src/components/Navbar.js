@@ -36,7 +36,7 @@ function Navbar(props) {
       <AppBar position="static" color="transparent" elevation={0}>
         <Container disableGutters={true}>
           <Toolbar>
-            <Typography variant="h4">🧮 Spreadsheet</Typography>
+            <Typography variant="h4">🎲 Montesheet</Typography>
             <div className={classes.spacer} />
               <IconButton
                 color="inherit"
