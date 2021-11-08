@@ -344,7 +344,7 @@ export function ReactDistribution(props) {
   
   useEffect(() => {
     monteCarlo();
-  }, [props]);
+  }, [props, monteCarlo]);
 
   return useMemo(() => {
     return {
@@ -357,5 +357,5 @@ export function ReactDistribution(props) {
       samples,
       paramStr
     };
-  }, [monteMin, monteMax, monteVals, histogram, monteMean]);
+  }, [monteMin, monteMax, monteVals, histogram, monteMean, paramStr]);
 }
