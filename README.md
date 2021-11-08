@@ -1,6 +1,8 @@
 
 ## 🧮 Montesheet
 
+Demo: https://montesheet.singleton.io/
+
 A simple proof-of-concept probabilistic spreadsheet in React with Material-UI.
 
 ## Using
