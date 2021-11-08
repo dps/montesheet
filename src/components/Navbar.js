@@ -38,6 +38,9 @@ function Navbar(props) {
           <Toolbar>
             <Typography variant="h4">🎲 Montesheet</Typography>
             <div className={classes.spacer} />
+            <Typography variant="p">a toy probabilistic spreadsheet - <a href="https://github.com/dps/montesheet#readme">docs</a></Typography>
+
+            <div className={classes.spacer} />
               <IconButton
                 color="inherit"
                 onClick={darkMode.toggle}
