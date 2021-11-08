@@ -11,7 +11,7 @@ import { parse } from "../util/parser";
 import { InputAdornment, TextField } from "@material-ui/core";
 import useMousetrap from "react-hook-mousetrap"
 import DistributionCell from "./DistributionCell";
-
+const cloneDeep = require('clone-deep');
 const toposort = require('toposort');
 
 window.values = {};
@@ -33,6 +33,19 @@ const useStyles = makeStyles((theme) => ({
   }
   ));
 
+function useStickyState(defaultValue, key) {
+  const [value, setValue] = React.useState(() => {
+    const stickyValue = window.localStorage.getItem(key);
+    return stickyValue !== null
+      ? JSON.parse(stickyValue)
+      : defaultValue;
+  });
+  React.useEffect(() => {
+    console.log(key, "changes");
+    window.localStorage.setItem(key, JSON.stringify(value));
+  }, [key, value]);
+  return [value, setValue];
+}
 
 function SpreadsheetItems(props) {
   const classes = useStyles();
@@ -41,7 +54,7 @@ function SpreadsheetItems(props) {
 
   const defaultItems = {};
 
-  const [cells, setCells] = useState(defaultItems);
+  const [cells, setCells] = useStickyState(defaultItems, "montesheet");
   const [errorCellText] = useState({});
   
   const [editCell, setEditCell] = useState("A1");
@@ -93,11 +106,8 @@ function SpreadsheetItems(props) {
           if (formula.startsWith("=")) {
               try {
                 const val = parse(cells[cell]);
-                console.log(val);
                 if (val.paramStr) {
-                  console.log("NORMAL FORMULA");
                   val.exec();
-                  console.log(val.monteMean);
                   window.values[cell] = val;
                 } else {
                   window.values[cell] = val;
@@ -198,6 +208,8 @@ const handleShiftDirKey = (v, h) => {
   const formulaKeyDown = (e) => {
     if (e.key === "Enter") {
         cells[editCell] = formulaFieldRef.current.value;
+        console.log("About to setCells");
+        setCells(cloneDeep(cells));
         setEditCell(nextCell(editCell, 1, 0));
     } else if (e.key === "ArrowDown") {
         if (e.shiftKey) {

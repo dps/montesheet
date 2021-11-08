@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import TableCell from '@material-ui/core/TableCell';
+import React from "react";
 import { Tooltip } from "@material-ui/core";
 import { Sparklines, SparklinesLine } from 'react-sparklines';
 
@@ -9,7 +8,6 @@ function DistributionCell(props) {
   
   if (distribution.exec) {
     distribution.exec();
-    console.log(distribution.val());
   }
 
   return (

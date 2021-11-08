@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 const gaussian = require('gaussian')
 
 export function mul(a, b) {
-  if (a.paramStr) {
+  if (a && a.paramStr) {
     return new combineDistributions(a, b, "*", (a,b) => {return a * b;});
   }
+  console.log("mul", a, b);
   return Number(a) * Number(b);
 }
 
@@ -31,13 +32,19 @@ export function div(a, b) {
 
 export function choose(a, b) {
   if (a.paramStr) {
-    return new combineDistributions(a, b, "||", (a,b) => {return Math.random() > 0.5 ? a :  b;});
+    return new combineDistributions(a, b, "choose", (a,b) => {return Math.random() > 0.5 ? a :  b;});
+  }
+  return "ERR"
+}
+
+export function mmax(a, b) {
+  if (a.paramStr) {
+    return new combineDistributions(a, b, "mmax", (a,b) => {return a > b ? a : b;});
   }
   return "ERR"
 }
 
 export function combineDistributions(a, b, label, combFunc) {
-  console.log(label, a, b);
   var monteMin = Number.MAX_VALUE;
   var monteMax = Number.MIN_VALUE;
   var monteVals = [];
@@ -67,10 +74,8 @@ export function combineDistributions(a, b, label, combFunc) {
   };
 
   const monteCarlo = () => {
-    console.log("* Monte Carlo");
     var values = [];
     var sliceData = zeros(slices);
-    console.log(sliceData);
     var min = Number.MAX_VALUE;
     var max = Number.MIN_VALUE;
     var sum = 0.0;
@@ -89,10 +94,7 @@ export function combineDistributions(a, b, label, combFunc) {
     values = values.sort();
     monteVals = values;
     monteMean = sum / samples;
-    console.log("max", max);
-    console.log("min", min);
     const sliceWidth = (max - min) / (1.0 * slices);
-    console.log("sliceWidth", sliceWidth);
 
     for (let i = 0; i < values.length; i++) {
       const x = values[i];
@@ -159,6 +161,22 @@ export function poisson(props) {
       , ...props});
 }
 
+export function exponential(props) {
+  return GenericDistribution(
+    { type: "exponential",
+      paramStr: `(${props.rate})`, 
+      sample: () => {
+        // http://en.wikipedia.org/wiki/Exponential_distribution#Generating_exponential_variates
+        // For example you can use it to simulate when an event is going to happen next, given its average rate:
+        // Buses arrive every 30 minutes on average, so that's an average rate of 2 per hour.
+        // I arrive at the bus station, I can use this to generate the next bus ETA:
+        //   exponential(2); // => 0.3213031016466269 hours, i.e. 19 minutes 
+        var rate = props.rate;
+        return -Math.log(Math.random()) / rate;
+      }
+      , ...props});
+}
+
 export function normal(props) {
   const generator = gaussian(props.mean, props.stddev*props.stddev);
   return GenericDistribution(
@@ -189,8 +207,6 @@ export function GenericDistribution(props) {
   var isCalculated = false;
 
   const type = props.type;
-  const min = props.min || 0.0;
-  const max = props.max || 1.0;
   const paramStr = props.paramStr;
 
   const slices = props.slices || 20;
@@ -205,10 +221,8 @@ export function GenericDistribution(props) {
   };
 
   const monteCarlo = () => {
-    console.log("Monte Carlo");
     var values = [];
     var sliceData = zeros(slices);
-    console.log(sliceData);
     var min = Number.MAX_VALUE;
     var max = Number.MIN_VALUE;
     var sum = 0.0;
@@ -227,10 +241,7 @@ export function GenericDistribution(props) {
     values = values.sort((a, b) => a - b);
     monteVals = values;
     monteMean = sum / samples;
-    console.log("max", max);
-    console.log("min", min);
     const sliceWidth = (max - min) / (1.0 * slices);
-    console.log("sliceWidth", sliceWidth);
 
     for (let i = 0; i < values.length; i++) {
       const x = values[i];
@@ -299,7 +310,6 @@ export function ReactDistribution(props) {
   const monteCarlo = () => {
     var values = [];
     var sliceData = zeros(slices);
-    console.log(sliceData);
     var min = Number.MAX_VALUE;
     var max = Number.MIN_VALUE;
     var sum = 0.0;
@@ -318,10 +328,7 @@ export function ReactDistribution(props) {
     values = values.sort();
     setMonteVals(values);
     setMonteMean(sum / samples);
-    console.log("max", max);
-    console.log("min", min);
     const sliceWidth = (max - min) / (1.0 * slices);
-    console.log("sliceWidth", sliceWidth);
 
     for (let i = 0; i < values.length; i++) {
       const x = values[i];
@@ -335,7 +342,7 @@ export function ReactDistribution(props) {
     
   };
   
-  const mountEffect = useEffect(() => {
+  useEffect(() => {
     monteCarlo();
   }, [props]);
 

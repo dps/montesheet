@@ -24,7 +24,9 @@
 "normal"              return 'NORMAL'
 "uniform"             return 'UNIFORM'
 "poisson"             return 'POISSON'
+"exponential"         return 'EXPONENTIAL'
 "choose"              return 'CHOOSE'
+"mmax"                return 'MMAX'
 <<EOF>>               return 'EOF'
 .                     return 'INVALID'
 
@@ -83,7 +85,11 @@ e
         {   $$ = new yy.distributions.uniform({min: $3,max: $5});}
     | POISSON '(' e ')'
         {   $$ = new yy.distributions.poisson({mean: $3});}
+    | EXPONENTIAL '(' e ')'
+        {   $$ = new yy.distributions.exponential({rate: $3});}
     | CHOOSE '(' e ',' e ')'
         {   $$ = new yy.distributions.choose($3,$5);}
+    | MMAX '(' e ',' e ')'
+        {   $$ = new yy.distributions.mmax($3,$5);}
 ;
 
