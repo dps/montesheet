@@ -2,43 +2,42 @@ import { useState, useEffect, useMemo } from "react";
 const gaussian = require('gaussian')
 
 export function mul(a, b) {
-  if (a && a.paramStr) {
+  if (a.paramStr || b.paramStr) {
     return new combineDistributions(a, b, "*", (a,b) => {return a * b;});
   }
-  console.log("mul", a, b);
   return Number(a) * Number(b);
 }
 
 export function plus(a, b) {
-  if (a.paramStr) {
+  if (a.paramStr || b.paramStr) {
     return new combineDistributions(a, b, "+", (a,b) => {return a + b;});
   }
   return Number(a) + Number(b);
 }
 
 export function minus(a, b) {
-  if (a.paramStr) {
+  if (a.paramStr || b.paramStr) {
     return new combineDistributions(a, b, "-", (a,b) => {return a - b;});
   }
   return Number(a) - Number(b);
 }
 
 export function div(a, b) {
-  if (a.paramStr) {
+  if (a.paramStr || b.paramStr) {
     return new combineDistributions(a, b, "/", (a,b) => {return a / b;});
   }
   return Number(a) / Number(b);
 }
 
 export function choose(a, b) {
-  if (a.paramStr) {
+  if (a.paramStr || b.paramStr) {
     return new combineDistributions(a, b, "choose", (a,b) => {return Math.random() > 0.5 ? a :  b;});
   }
   return "ERR"
 }
 
 export function mmax(a, b) {
-  if (a.paramStr) {
+  if (a.paramStr || b.paramStr) {
     return new combineDistributions(a, b, "mmax", (a,b) => {return a > b ? a : b;});
   }
   return "ERR"
@@ -52,21 +51,21 @@ export function combineDistributions(a, b, label, combFunc) {
   var monteMean = 0.0;
   var isCalculated = false;
 
-  const aVal = a.val();
-  const bVal = b.val();
+  const aVal = a.paramStr && a.val();
+  const bVal = b.paramStr && b.val();
 
 
   const type = label;
-  const paramStr = `(${aVal.monteMean.toPrecision(2)},${bVal.monteMean.toPrecision(2)})`;
+  const paramStr = `(${aVal ? aVal.monteMean.toPrecision(2) : a},${bVal ? bVal.monteMean.toPrecision(2) : b})`;
 
 
-  const slices = aVal.slices || 20;
-  const samples = aVal.samples || 1000 * aVal.slices;
+  const slices = (aVal && aVal.slices) || (bVal && bVal.slices) || 20;
+  const samples = aVal && (aVal.samples) || 1000 * slices;
 
   const sample = () => {
-    const aIdx = Math.floor(Math.random() * aVal.samples | 0);
-    const bIdx = Math.floor(Math.random() * bVal.samples | 0);
-    return combFunc(aVal.monteVals[aIdx], bVal.monteVals[bIdx]);
+    const aIdx = a.paramStr && Math.floor(Math.random() * aVal.samples | 0);
+    const bIdx = b.paramStr && Math.floor(Math.random() * bVal.samples | 0);
+    return combFunc(a.paramStr ? aVal.monteVals[aIdx] : a, b.paramStr ? bVal.monteVals[bIdx] : b);
   };
 
   const zeros = (n) => {
