@@ -6,6 +6,9 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
+import Button from '@material-ui/core/Button';
+import ClearAllIcon from '@material-ui/icons/ClearAll';
 import { makeStyles } from "@material-ui/core/styles";
 import { parse } from "../util/parser";
 import { InputAdornment, TextField } from "@material-ui/core";
@@ -59,6 +62,35 @@ function SpreadsheetItems(props) {
   
   const [editCell, setEditCell] = useState("A1");
   const [selection, setSelection] = useState("A1:A1");
+
+  const clearAll = () => {
+    window.values = {};
+    setCells({});
+  }
+
+  const demo1 = () => {
+    window.values = {};
+    setCells({'A1':'😎 Demo 1', 'B1': 'Probabilistic revenue model', 'C1': 'Deterministic model',
+              'A2': 'Total annual addressable market (M units)', 'B2': '=normal(10,2)', 'C2': '10',
+              'A3': 'Terminal market share (%)', 'B3': '=normal(0.5,0.05)', 'C3': '0.5',
+              'A4': 'Unit price ($)', 'B4': '=uniform(100,150)', 'C4': '125',
+              'A5': 'Total annual revenue ($)', 'B5': '=B2*B3*B4', 'C5': '=C2*C3*C4'});
+  }
+
+  const demo2 = () => {
+    window.values = {};
+    setCells({'A1':'🧚🏻 Demo 2', 'B1': '',
+              'A2': 'Lost teeth per year', 'B2': '=poisson(3)',
+              'A3': 'Per tooth bounty', 'B3': '=uniform(1.0,2.0)',
+              'A5': 'Expected annual payout ($)', 'B5': '=B2*B3',});
+  }
+
+  const demo3 = () => {
+    window.values = {};
+    setCells(
+      JSON.parse('{"A1":"mean for C6","B1":"1.0","A2":"stddev for C6","B2":"0.5","A3":"","B3":"","A4":"","B4":"","C6":"=normal(B1,B2)","B6":"normal(mean, stddev)","B7":"uniform(min, max)","C7":"=uniform(1,2)","B8":"poisson(mean)","C8":"=poisson(3.0)","B9":"exponential(rate)","C9":"=exponential(2)"}')
+      );
+    }
 
   const toposortCells = () => {
     var graph = [];
@@ -250,6 +282,12 @@ const renderDistOrVal = (cellName) => {
   return (
     <>
     {toposortCells()}
+    <ButtonGroup disableElevation size="small">
+      <Button onClick={demo1}>Demo 1: Revenue Model</Button>
+      <Button onClick={demo2}>Demo 2: Tooth Fairy</Button>
+      <Button onClick={demo3}>Demo 3: All the distributions</Button>
+      <Button onClick={clearAll}><ClearAllIcon/></Button>
+    </ButtonGroup>
     <TextField inputRef={formulaFieldRef} key={"formula-" + editCell}
       fullWidth id="filled-basic" label="Formula" variant="filled" defaultValue={cells[editCell] || ""}
       onKeyDown={formulaKeyDown} autoFocus
