@@ -124,7 +124,7 @@ function SpreadsheetItems(props) {
       }
   }
 
-  const fillDown = () => {
+  const fillDown = (e) => {
       const startCell = selection.split(":")[0];
       const endCell = selection.split(":")[1];
       const startParts = cellParts(startCell);
@@ -153,7 +153,7 @@ function SpreadsheetItems(props) {
       }
       toposortCells();
       setCells(cells);
-      handleUnmodifiedDirKey(0,0);
+      handleUnmodifiedDirKey(0,0,e);
   }
 
   const cellParts = (cellName) => {
@@ -185,14 +185,18 @@ function SpreadsheetItems(props) {
         parts[1] <= selEndParts[1]);
 }
 
-useMousetrap("down", () => handleUnmodifiedDirKey(1, 0));
-useMousetrap("up", () => handleUnmodifiedDirKey(-1, 0));
-useMousetrap("left", () => handleUnmodifiedDirKey(0, -1));
-useMousetrap("right", () => handleUnmodifiedDirKey(0, 1));
-useMousetrap("shift+down", () => handleShiftDirKey(1, 0));
-useMousetrap("esc", () => handleUnmodifiedDirKey(0, 0));
+useMousetrap("down", (e) => handleUnmodifiedDirKey(1, 0, e));
+useMousetrap("up", (e) => handleUnmodifiedDirKey(-1, 0, e));
+useMousetrap("left", (e) => handleUnmodifiedDirKey(0, -1, e));
+useMousetrap("right", (e) => handleUnmodifiedDirKey(0, 1, e));
+useMousetrap("shift+down", (e) => handleShiftDirKey(1, 0, e));
+useMousetrap("esc", (e) => handleUnmodifiedDirKey(0, 0, e));
 
-const handleUnmodifiedDirKey = (v, h) => {
+const handleUnmodifiedDirKey = (v, h, e) => {
+    if (formulaFieldRef.current.selectionStart != formulaFieldRef.current.value.length) {
+        return;
+    }
+    e.preventDefault();
     const nCell = nextCell(editCell, v, h);
     setEditCell(nCell);
     setSelection(nCell + ":" + nCell);
@@ -208,31 +212,30 @@ const handleShiftDirKey = (v, h) => {
   const formulaKeyDown = (e) => {
     if (e.key === "Enter") {
         cells[editCell] = formulaFieldRef.current.value;
-        console.log("About to setCells");
         setCells(cloneDeep(cells));
         setEditCell(nextCell(editCell, 1, 0));
     } else if (e.key === "ArrowDown") {
         if (e.shiftKey) {
             handleShiftDirKey(1, 0);
         } else {
-            handleUnmodifiedDirKey(1, 0);
+            handleUnmodifiedDirKey(1, 0, e);
         }
     } else if (e.key === "ArrowUp") {
         if (e.shiftKey) {
             handleShiftDirKey(-1, 0);
         } else {
             e.preventDefault();
-            handleUnmodifiedDirKey(-1, 0);
+            handleUnmodifiedDirKey(-1, 0, e);
         }
     } else if (e.key === "ArrowLeft") {
-        handleUnmodifiedDirKey(0, -1);
+        handleUnmodifiedDirKey(0, -1, e);
     } else if (e.key === "ArrowRight") {
-        handleUnmodifiedDirKey(0, 1);
+        handleUnmodifiedDirKey(0, 1, e);
     } else if (e.key === "Escape") {
-        handleUnmodifiedDirKey(0, 0);
+        handleUnmodifiedDirKey(0, 0, e);
     } else if (e.key === "d" && e.ctrlKey) {
         // Fill down
-        fillDown();
+        fillDown(e);
     } 
     formulaFieldRef.current.focus();
 };
