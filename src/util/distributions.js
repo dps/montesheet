@@ -188,11 +188,12 @@ export function normal(props) {
 }
 
 export function uniform(props) {
+  console.log("UF", props);
   return GenericDistribution(
     { type: "uniform",
       paramStr: `(${props.min}, ${props.max})`, 
       sample: () => {
-        return Math.random() * (props.max - props.min) + props.min
+        return Math.random() * (Number(props.max) - Number(props.min)) + Number(props.min)
       }
       , ...props});
 }
