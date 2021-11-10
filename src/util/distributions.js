@@ -106,7 +106,7 @@ export function combineDistributions(a, b, label, combFunc) {
     }
     monteMax = max;
     monteMin = min;
-    values = values.sort();
+    values = values.sort((a, b) => a - b);
     monteVals = values;
     monteMean = sum / samples;
     const sliceWidth = (max - min) / (1.0 * slices);
@@ -204,7 +204,6 @@ export function normal(props) {
 }
 
 export function uniform(props) {
-  console.log("UF", props);
   return GenericDistribution(
     { type: "uniform",
       paramStr: `(${props.min}, ${props.max})`, 
@@ -341,7 +340,7 @@ export function ReactDistribution(props) {
     }
     setMonteMax(max);
     setMonteMin(min);
-    values = values.sort();
+    values = values.sort((a, b) => a - b);
     setMonteVals(values);
     setMonteMean(sum / samples);
     const sliceWidth = (max - min) / (1.0 * slices);

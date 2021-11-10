@@ -90,7 +90,7 @@ function SpreadsheetItems(props) {
   const demo3 = () => {
     window.values = {};
     setCells(
-      JSON.parse('{"A1":"mean for C6","B1":"1.0","A2":"stddev for C6","B2":"0.5","A3":"","B3":"","A4":"","B4":"","C6":"=normal(B1,B2)","B6":"normal(mean, stddev)","B7":"uniform(min, max)","C7":"=uniform(1,2)","B8":"poisson(mean)","C8":"=poisson(3.0)","B9":"exponential(rate)","C9":"=exponential(2)"}')
+      JSON.parse('{"A1":"👽Drake Equation","B1":"","C1":"","D1":"","A2":"R* (rate of star formation in our Galaxy)","B2":"=normal(2.25, 0.5)","A3":"Fp (fraction of stars with planets)","B3":"1.0","A4":"Ne (number of planets per star that might support life)","B4":"=1+normal(1, 0.5)","A5":"Fl (fraction that develop life)","B5":"=normal(0.5,0.25)","A6":"Fi (intelligent life)","B6":"=normal(0.5,0.25)","A7":"Fc (communicate)","B7":"=normal(0.15,0.05)","A8":"L (civilization lifetime)","B8":"1000","E2":"=B2*B3*B4*B5*B6*B7*B8","D2":"Civilizations in the milky way.","E3":"=p10(E2)","D3":"p10","D4":"median","D5":"p99","E4":"=p50(E2)","E5":"=p99(E2)"}')
       );
     }
 
@@ -288,7 +288,7 @@ const renderDistOrVal = (cellName) => {
     <ButtonGroup className={classes.buttonBar} disableElevation size="small">
       <Button onClick={demo1}>Demo 1: Revenue Model</Button>
       <Button onClick={demo2}>Demo 2: Tooth Fairy</Button>
-      <Button onClick={demo3}>Demo 3: All the distributions</Button>
+      <Button onClick={demo3}>Demo 3: Drake Equation</Button>
       <Button onClick={clearAll}><ClearAllIcon/></Button>
     </ButtonGroup>
     <TextField inputRef={formulaFieldRef} key={"formula-" + editCell}
