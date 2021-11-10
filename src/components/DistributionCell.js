@@ -1,8 +1,11 @@
 import React from "react";
 import { Tooltip } from "@material-ui/core";
 import { Sparklines, SparklinesLine } from 'react-sparklines';
+import useDarkMode from "use-dark-mode";
 
 function DistributionCell(props) {
+
+  const darkMode = useDarkMode();
 
   const distribution = props.distribution;
   
@@ -23,7 +26,7 @@ function DistributionCell(props) {
 
         }><div><b>{props.distribution.type}</b>{distribution.val().paramStr} μ: {distribution.val().monteMean.toPrecision(4)}<br/>
         <Sparklines data={distribution.val().histogram}  svgWidth={180} svgHeight={50} width={100} height={50} margin={5} min={distribution.val().monteMin}>
-            <SparklinesLine color="blue" />
+            <SparklinesLine color={darkMode.value ? "pink" : "blue"} />
         </Sparklines></div></Tooltip>
         </>
         
