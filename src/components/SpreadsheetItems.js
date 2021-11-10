@@ -74,7 +74,7 @@ function SpreadsheetItems(props) {
 
   const demo1 = () => {
     window.values = {};
-    setCells({'A1':'😎 Revenue model', 'B1': 'Probabilistic revenue model', 'C1': 'Deterministic model',
+    setCells({'A1':'📈 Revenue model', 'B1': 'Probabilistic revenue model', 'C1': 'Deterministic model',
               'A2': 'Total annual addressable market (M units)', 'B2': '=normal(10,2)', 'C2': '10',
               'A3': 'Terminal market share (%)', 'B3': '=normal(0.5,0.05)', 'C3': '0.5',
               'A4': 'Unit price ($)', 'B4': '=uniform(100,150)', 'C4': '125',
