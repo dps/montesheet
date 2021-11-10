@@ -9,7 +9,7 @@ function DashboardSection(props) {
       <Container>
         <Grid container={true} spacing={4}>
           <Grid item={true} xs={12} md={12}>
-            <SpreadsheetItems />
+            <SpreadsheetItems setTitle={props.setTitle}/>
           </Grid>
         </Grid>
       </Container>

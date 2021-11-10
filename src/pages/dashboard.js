@@ -10,6 +10,7 @@ function DashboardPage(props) {
       bgImageOpacity={1}
       title="Dashboard"
       subtitle=""
+      setTitle={props.setTitle}
     />
   );
 }

@@ -1,4 +1,4 @@
-import React, { createRef, useState } from "react";
+import React, { createRef, useState, useEffect } from "react";
 import Paper from "@material-ui/core/Paper";
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -65,6 +65,8 @@ function SpreadsheetItems(props) {
   const [editCell, setEditCell] = useState("A1");
   const [selection, setSelection] = useState("A1:A1");
 
+  useEffect(() => {props.setTitle(cells['A1'] || "Montesheet");}, [cells]);
+
   const clearAll = () => {
     window.values = {};
     setCells({});
@@ -72,7 +74,7 @@ function SpreadsheetItems(props) {
 
   const demo1 = () => {
     window.values = {};
-    setCells({'A1':'😎 Demo 1', 'B1': 'Probabilistic revenue model', 'C1': 'Deterministic model',
+    setCells({'A1':'😎 Revenue model', 'B1': 'Probabilistic revenue model', 'C1': 'Deterministic model',
               'A2': 'Total annual addressable market (M units)', 'B2': '=normal(10,2)', 'C2': '10',
               'A3': 'Terminal market share (%)', 'B3': '=normal(0.5,0.05)', 'C3': '0.5',
               'A4': 'Unit price ($)', 'B4': '=uniform(100,150)', 'C4': '125',
@@ -81,7 +83,7 @@ function SpreadsheetItems(props) {
 
   const demo2 = () => {
     window.values = {};
-    setCells({'A1':'🧚🏻 Demo 2', 'B1': '',
+    setCells({'A1':'🧚🏻 Tooth fairy', 'B1': '',
               'A2': 'Lost teeth per year', 'B2': '=poisson(3)',
               'A3': 'Per tooth bounty', 'B3': '=uniform(1.0,2.0)',
               'A5': 'Expected annual payout ($)', 'B5': '=B2*B3',});
@@ -90,7 +92,7 @@ function SpreadsheetItems(props) {
   const demo3 = () => {
     window.values = {};
     setCells(
-      JSON.parse('{"A1":"👽Drake Equation","B1":"","C1":"","D1":"","A2":"R* (rate of star formation in our Galaxy)","B2":"=normal(2.25, 0.5)","A3":"Fp (fraction of stars with planets)","B3":"1.0","A4":"Ne (number of planets per star that might support life)","B4":"=1+normal(1, 0.5)","A5":"Fl (fraction that develop life)","B5":"=normal(0.5,0.25)","A6":"Fi (intelligent life)","B6":"=normal(0.5,0.25)","A7":"Fc (communicate)","B7":"=normal(0.15,0.05)","A8":"L (civilization lifetime)","B8":"1000","E2":"=B2*B3*B4*B5*B6*B7*B8","D2":"Civilizations in the milky way.","E3":"=p10(E2)","D3":"p10","D4":"median","D5":"p99","E4":"=p50(E2)","E5":"=p99(E2)"}')
+      JSON.parse('{"A1":"👽 Drake Equation","B1":"","C1":"","D1":"","A2":"R* (rate of star formation in our Galaxy)","B2":"=normal(2.25, 0.5)","A3":"Fp (fraction of stars with planets)","B3":"1.0","A4":"Ne (number of planets per star that might support life)","B4":"=1+normal(1, 0.5)","A5":"Fl (fraction that develop life)","B5":"=normal(0.5,0.25)","A6":"Fi (intelligent life)","B6":"=normal(0.5,0.25)","A7":"Fc (communicate)","B7":"=normal(0.15,0.05)","A8":"L (civilization lifetime)","B8":"1000","E2":"=B2*B3*B4*B5*B6*B7*B8","D2":"Civilizations in the milky way.","E3":"=p10(E2)","D3":"p10","D4":"median","D5":"p99","E4":"=p50(E2)","E5":"=p99(E2)"}')
       );
     }
 

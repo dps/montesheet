@@ -36,9 +36,9 @@ function Navbar(props) {
       <AppBar position="static" color="transparent" elevation={0}>
         <Container disableGutters={true}>
           <Toolbar>
-            <Typography variant="h4">🎲 Montesheet</Typography>
+            <Typography variant="h4">{props.title || "🎲 Montesheet"}</Typography>
             <div className={classes.spacer} />
-            <Typography variant="p">a toy probabilistic spreadsheet - <a href="https://github.com/dps/montesheet#readme">docs</a></Typography>
+            <Typography variant="p"><b>montesheet</b> a toy probabilistic spreadsheet - <a href="https://github.com/dps/montesheet#readme">docs</a></Typography>
 
             <div className={classes.spacer} />
               <IconButton
