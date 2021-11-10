@@ -32,7 +32,9 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.info.main
   },
   selectedCell : {
-        backgroundColor: theme.palette.secondary.main}
+        backgroundColor: theme.palette.secondary.main},
+  buttonBar : {
+    marginBottom: "4px"}
   }
   ));
 
@@ -149,6 +151,7 @@ function SpreadsheetItems(props) {
                 }
                 delete errorCellText[cell];
               } catch (err) {
+                console.log(err.message);
                 errorCellText[cell] = err.message;
                 window.values[cell] = "ERR";
               }
@@ -282,7 +285,7 @@ const renderDistOrVal = (cellName) => {
   return (
     <>
     {toposortCells()}
-    <ButtonGroup disableElevation size="small">
+    <ButtonGroup className={classes.buttonBar} disableElevation size="small">
       <Button onClick={demo1}>Demo 1: Revenue Model</Button>
       <Button onClick={demo2}>Demo 2: Tooth Fairy</Button>
       <Button onClick={demo3}>Demo 3: All the distributions</Button>

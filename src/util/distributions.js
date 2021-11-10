@@ -1,6 +1,22 @@
 import { useState, useEffect, useMemo } from "react";
 const gaussian = require('gaussian')
 
+export function min(a) {
+  return a.val().monteMin;
+}
+
+export function max(a) {
+  return a.val().monteMax;
+}
+
+export function mean(a) {
+  return a.val().monteMean;
+}
+
+export function pn(n, a) {
+  return (a.val().monteVals[Math.floor(Number(n.substring(1)) * a.val().samples / 100)]);
+}
+
 export function mul(a, b) {
   if (a.paramStr || b.paramStr) {
     return new combineDistributions(a, b, "*", (a,b) => {return a * b;});
@@ -60,7 +76,7 @@ export function combineDistributions(a, b, label, combFunc) {
 
 
   const slices = (aVal && aVal.slices) || (bVal && bVal.slices) || 20;
-  const samples = aVal && (aVal.samples) || 1000 * slices;
+  const samples = (aVal && aVal.samples) || 1000 * slices;
 
   const sample = () => {
     const aIdx = a.paramStr && Math.floor(Math.random() * aVal.samples | 0);

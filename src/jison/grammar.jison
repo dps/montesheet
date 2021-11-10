@@ -27,6 +27,10 @@
 "exponential"         return 'EXPONENTIAL'
 "choose"              return 'CHOOSE'
 "mmax"                return 'MMAX'
+"min"                 return 'MIN'
+"max"                 return 'MAX'
+"mean"                return 'MEAN'
+p[0-9]+               return 'PN'
 <<EOF>>               return 'EOF'
 .                     return 'INVALID'
 
@@ -91,5 +95,13 @@ e
         {   $$ = new yy.distributions.choose($3,$5);}
     | MMAX '(' e ',' e ')'
         {   $$ = new yy.distributions.mmax($3,$5);}
+    | PN '(' e ')'
+        {$$ = yy.distributions.pn($1, $3);}
+    | MIN '(' e ')'
+        {$$ = yy.distributions.min($3);}
+    | MAX '(' e ')'
+        {$$ = yy.distributions.max($3);}
+    | MEAN '(' e ')'
+        {$$ = yy.distributions.mean($3);}
 ;
 
