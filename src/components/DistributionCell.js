@@ -25,7 +25,7 @@ function DistributionCell(props) {
             </>
 
         }><div><b>{props.distribution.type}</b>{distribution.val().paramStr} μ: {distribution.val().monteMean.toPrecision(4)}<br/>
-        <Sparklines data={distribution.val().histogram}  svgWidth={180} svgHeight={50} width={100} height={50} margin={5} min={distribution.val().monteMin}>
+        <Sparklines data={distribution.val().histogram}  svgWidth={props.svgWidth || 180} svgHeight={props.svgHeight || 50} width={100} height={50} margin={5} min={distribution.val().monteMin}>
             <SparklinesLine color={darkMode.value ? "pink" : "blue"} />
         </Sparklines></div></Tooltip>
         </>

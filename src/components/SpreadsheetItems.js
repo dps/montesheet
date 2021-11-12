@@ -11,7 +11,8 @@ import Button from '@material-ui/core/Button';
 import ClearAllIcon from '@material-ui/icons/ClearAll';
 import { makeStyles } from "@material-ui/core/styles";
 import { parse } from "../util/parser";
-import { InputAdornment, TextField, Typography } from "@material-ui/core";
+import { InputAdornment, TextField, Typography, Backdrop, Box, Modal, Fade } from "@material-ui/core";
+
 import useMousetrap from "react-hook-mousetrap"
 import DistributionCell from "./DistributionCell";
 const cloneDeep = require('clone-deep');
@@ -66,6 +67,9 @@ function SpreadsheetItems(props) {
   const [editCell, setEditCell] = useState("A1");
   const [selection, setSelection] = useState("A1:A1");
 
+  const [showModal, setShowModal] = useState(false);
+  const [modalCell, setModalCell] = useState("");
+
   useEffect(() => {
     props.setTitle(cells['A1'] || "Montesheet");
 
@@ -100,6 +104,12 @@ function SpreadsheetItems(props) {
       JSON.parse('{"A1":"👽 Drake Equation","B1":"","C1":"","D1":"","A2":"R* (rate of star formation in our Galaxy)","B2":"=normal(2.25, 0.5)","A3":"Fp (fraction of stars with planets)","B3":"1.0","A4":"Ne (number of planets per star that might support life)","B4":"=1+normal(1, 0.5)","A5":"Fl (fraction that develop life)","B5":"=normal(0.5,0.25)","A6":"Fi (intelligent life)","B6":"=normal(0.5,0.25)","A7":"Fc (communicate)","B7":"=normal(0.15,0.05)","A8":"L (civilization lifetime)","B8":"1000","E2":"=B2*B3*B4*B5*B6*B7*B8","D2":"Civilizations in the milky way.","E3":"=p10(E2)","D3":"p10","D4":"median","D5":"p99","E4":"=p50(E2)","E5":"=p99(E2)"}')
       );
     }
+
+  const showModalCell = (cell) => {
+    console.log("show modal cell", cell);
+    setModalCell(cell);
+    setShowModal(true);
+  }
 
   const toposortCells = () => {
     var stopwatch = performance.now();
@@ -237,6 +247,9 @@ useMousetrap("shift+down", (e) => handleShiftDirKey(1, 0, e));
 useMousetrap("esc", (e) => handleUnmodifiedDirKey(0, 0, e));
 
 const handleUnmodifiedDirKey = (v, h, e) => {
+    if (!formulaFieldRef.current) {
+      return;
+    }
     if (formulaFieldRef.current.selectionStart != formulaFieldRef.current.value.length) {
         return;
     }
@@ -291,6 +304,15 @@ const renderDistOrVal = (cellName) => {
   return window.values[cellName] || cells[cellName] || '';
 }
 
+const modalStyle = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  backgroundColor: 'black',
+  border: '2px solid #000',
+  padding: '20px',
+};
 
   return (
     <>
@@ -332,7 +354,7 @@ const renderDistOrVal = (cellName) => {
                   return <TableCell 
                       className={cellName === editCell ? classes.outlined : inSelection(cellName) ? classes.selectedCell : classes.tableCell}
                       key={"cell-" + cellName + "-" + (cells[cellName] || '')}
-                      onClick={() => {setEditCell(cellName);setSelection(cellName + ":" + cellName);}}
+                      onClick={() => {if (editCell === cellName) {showModalCell(cellName)}; setEditCell(cellName);setSelection(cellName + ":" + cellName);}}
                       align="right">{renderDistOrVal(cellName)}
                       </TableCell>;
                 })}
@@ -341,6 +363,34 @@ const renderDistOrVal = (cellName) => {
         </TableBody>
       </Table>
     </TableContainer>
+
+    {modalCell && cells[modalCell] && window.values[modalCell] && window.values[modalCell].val().monteMean && <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        open={showModal}
+        onClose={() => setShowModal(false)}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500,
+        }}
+      >
+        <Fade in={showModal}>
+          <div style={modalStyle}>
+            <Typography id="transition-modal-title" variant="h6" component="h2">
+              {modalCell} {cells[modalCell] || ''}
+            </Typography>
+              <DistributionCell distribution={window.values[modalCell]} svgHeight={200} svgWidth={720}/>
+              <Typography variant="h6">minimum: {window.values[modalCell].val().monteMin.toPrecision(4)}</Typography>
+              <Typography variant="h6">10th percentile: {(window.values[modalCell].val().monteVals[Math.floor(window.values[modalCell].val().samples / 10)]).toPrecision(4)}</Typography>
+              <Typography variant="h6">mean: {window.values[modalCell].val().monteMean.toPrecision(4)}</Typography>
+              <Typography variant="h6">90th percentile: {(window.values[modalCell].val().monteVals[Math.floor(9 * window.values[modalCell].val().samples / 10)]).toPrecision(4)}</Typography>
+              <Typography variant="h6">maximum: {window.values[modalCell].val().monteMax.toPrecision(4)}</Typography>
+
+          </div>
+        </Fade>
+      </Modal>}
+    
 
     <Typography variant="h7" align="center">Last simulation ran in: {renderTime.toPrecision(4)} ms ⸻ made with 🎲 by @dps</Typography>
     </>
