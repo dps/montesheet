@@ -342,7 +342,7 @@ const renderDistOrVal = (cellName) => {
       </Table>
     </TableContainer>
 
-    <Typography variant="h7" align="center">Last simulation ran in: {renderTime.toPrecision(4)} ms</Typography>
+    <Typography variant="h7" align="center">Last simulation ran in: {renderTime.toPrecision(4)} ms ⸻ made with 🎲 by @dps</Typography>
     </>
   );
 }

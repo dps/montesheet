@@ -23,6 +23,10 @@ const useStyles = makeStyles((theme) => ({
   spacer: {
     flexGrow: 1,
   },
+  link: {
+    textDecoration: "none",
+    color: theme.palette.text.secondary,
+  }
 }));
 
 function Navbar(props) {
@@ -38,7 +42,7 @@ function Navbar(props) {
           <Toolbar>
             <Typography variant="h4">{props.title || "🎲 Montesheet"}</Typography>
             <div className={classes.spacer} />
-            <Typography variant="p"><b>montesheet</b> a toy probabilistic spreadsheet - <a href="https://github.com/dps/montesheet#readme">docs</a></Typography>
+            <Typography variant="p"><b>montesheet</b> is a toy probabilistic spreadsheet made with 🎲 by @dps - <a className={classes.link} href="https://github.com/dps/montesheet#readme">docs</a></Typography>
 
             <div className={classes.spacer} />
               <IconButton
