@@ -11,7 +11,7 @@ import Button from '@material-ui/core/Button';
 import ClearAllIcon from '@material-ui/icons/ClearAll';
 import { makeStyles } from "@material-ui/core/styles";
 import { parse } from "../util/parser";
-import { InputAdornment, TextField } from "@material-ui/core";
+import { InputAdornment, TextField, Typography } from "@material-ui/core";
 import useMousetrap from "react-hook-mousetrap"
 import DistributionCell from "./DistributionCell";
 const cloneDeep = require('clone-deep');
@@ -61,11 +61,16 @@ function SpreadsheetItems(props) {
 
   const [cells, setCells] = useStickyState(defaultItems, "montesheet");
   const [errorCellText] = useState({});
+  const [renderTime, setRenderTime] = useState(0);
   
   const [editCell, setEditCell] = useState("A1");
   const [selection, setSelection] = useState("A1:A1");
 
-  useEffect(() => {props.setTitle(cells['A1'] || "Montesheet");}, [cells]);
+  useEffect(() => {
+    props.setTitle(cells['A1'] || "Montesheet");
+
+    toposortCells();
+  }, [cells]);
 
   const clearAll = () => {
     window.values = {};
@@ -97,6 +102,7 @@ function SpreadsheetItems(props) {
     }
 
   const toposortCells = () => {
+    var stopwatch = performance.now();
     var graph = [];
 
     for (var item in cells) {
@@ -132,6 +138,7 @@ function SpreadsheetItems(props) {
       }
       const topo = toposort(graph);
       parseCells(topo);
+      setRenderTime(performance.now() - stopwatch);
   }
 
   const parseCells = (topo) => {
@@ -284,9 +291,10 @@ const renderDistOrVal = (cellName) => {
   return window.values[cellName] || cells[cellName] || '';
 }
 
+
   return (
     <>
-    {toposortCells()}
+    {/*toposortCells()*/}
     <ButtonGroup className={classes.buttonBar} disableElevation size="small">
       <Button onClick={demo1}>Demo 1: Revenue Model</Button>
       <Button onClick={demo2}>Demo 2: Tooth Fairy</Button>
@@ -334,6 +342,7 @@ const renderDistOrVal = (cellName) => {
       </Table>
     </TableContainer>
 
+    <Typography variant="h7" align="center">Last simulation ran in: {renderTime.toPrecision(4)} ms</Typography>
     </>
   );
 }
