@@ -85,6 +85,10 @@ e
         {$$ = Math.PI;}
     | NORMAL '(' e ',' e ')'
         {   $$ = new yy.distributions.normal({mean: $3,stddev: $5});}
+    | NORMAL '(' e ',' e ',' e ')'
+        {   $$ = new yy.distributions.normal({mean: $3,stddev: $5, sampleMin: $7});}
+    | NORMAL '(' e ',' e ',' e ',' e ')'
+        {   $$ = new yy.distributions.normal({mean: $3,stddev: $5, sampleMin: $7, sampleMax: $9});}
     | UNIFORM '(' e ',' e ')'
         {   $$ = new yy.distributions.uniform({min: $3,max: $5});}
     | POISSON '(' e ')'

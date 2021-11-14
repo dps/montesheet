@@ -65,6 +65,7 @@ export function combineDistributions(a, b, label, combFunc) {
   var monteVals = [];
   var histogram = [];
   var monteMean = 0.0;
+  var sliceWidth = 0.0;
   var isCalculated = false;
 
   const aVal = a.paramStr && a.val();
@@ -109,7 +110,7 @@ export function combineDistributions(a, b, label, combFunc) {
     values = values.sort((a, b) => a - b);
     monteVals = values;
     monteMean = sum / samples;
-    const sliceWidth = (max - min) / (1.0 * slices);
+    sliceWidth = (max - min) / (1.0 * slices);
 
     for (let i = 0; i < values.length; i++) {
       const x = values[i];
@@ -141,7 +142,8 @@ export function combineDistributions(a, b, label, combFunc) {
       slices,
       samples,
       paramStr,
-      exec
+      exec,
+      sliceWidth,
     }
   };
   
@@ -199,8 +201,10 @@ export function normal(props) {
       paramStr: `(${props.mean}, ${props.stddev})`, 
       sample: () => {
         return generator.ppf(Math.random());
-      }
-      , ...props});
+      },
+      minSample: props.sampleMin,
+      maxSample: props.sampleMax,
+      ...props});
 }
 
 export function uniform(props) {
@@ -219,16 +223,23 @@ export function GenericDistribution(props) {
   var monteVals = [];
   var histogram = [];
   var monteMean = 0.0;
+  var sliceWidth = 0.0;
   var isCalculated = false;
 
   const type = props.type;
   const paramStr = props.paramStr;
 
-  const slices = props.slices || 20;
+  const slices = props.slices || 50;
   const samples = props.samples || 1000 * slices;
 
   const sample = () => {
-    return props.sample();
+    var val = props.sample();
+    if (props.minSample != null || props.maxSample != null) {
+      while(val < props.minSample || val > props.maxSample) {
+        val = props.sample();
+      }
+    }
+    return val;
   };
 
   const zeros = (n) => {
@@ -256,7 +267,7 @@ export function GenericDistribution(props) {
     values = values.sort((a, b) => a - b);
     monteVals = values;
     monteMean = sum / samples;
-    const sliceWidth = (max - min) / (1.0 * slices);
+    sliceWidth = (max - min) / (1.0 * slices);
 
     for (let i = 0; i < values.length; i++) {
       const x = values[i];
@@ -288,7 +299,8 @@ export function GenericDistribution(props) {
       slices,
       samples,
       paramStr,
-      exec
+      exec,
+      sliceWidth,
     }
   };
   
