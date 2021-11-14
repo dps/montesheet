@@ -24,7 +24,7 @@ A normal distribution (gaussian) with mean and standard deviation as specified a
 
 `=normal(mean, stddev, [min , max])`
 A normal distribution (gaussian) with mean and standard deviation as specified, a minimum sample value of min and a maximum sample value of max. Note that this can skew the distribution mean higher or lower than the mean you specify as the center of the normal distribution. Any samples falling outside of [min, max] will be resampled.
-*warning* - montesheet is not yet smart enough to detect invalid min,max values for the given mean and stddev and will hang trying to find samples that match. Use with care.
+*warning* - montesheet is not yet smart enough to detect invalid min,max values for the given mean and stddev and will produce 0.0 for samples that didn't converge within [min,max]. Use with care.
 
 ### uniform
 `=uniform(min, max)`
