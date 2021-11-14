@@ -226,6 +226,8 @@ export function GenericDistribution(props) {
   var sliceWidth = 0.0;
   var isCalculated = false;
 
+  const MAX_RESAMPLE = 10;
+
   const type = props.type;
   const paramStr = props.paramStr;
 
@@ -234,10 +236,15 @@ export function GenericDistribution(props) {
 
   const sample = () => {
     var val = props.sample();
+    var resampled = 0;
     if (props.minSample != null || props.maxSample != null) {
-      while(val < props.minSample || val > props.maxSample) {
+      while(resampled < MAX_RESAMPLE && (val < props.minSample || val > props.maxSample)) {
         val = props.sample();
+        resampled++;
       }
+    }
+    if (resampled == MAX_RESAMPLE) {
+      return 0.0;
     }
     return val;
   };
