@@ -19,6 +19,13 @@ The following distribution functions are available:
 `=normal(mean, stddev)`
 A normal distribution (gaussian) with mean and standard deviation as specified.
 
+`=normal(mean, stddev, [min])`
+A normal distribution (gaussian) with mean and standard deviation as specified and a minimum sample value of min. Note that this can skew the distribution mean higher than the mean you specify as the center of the normal distribution. Any samples falling below the minimum value will be resampled.
+
+`=normal(mean, stddev, [min , max])`
+A normal distribution (gaussian) with mean and standard deviation as specified, a minimum sample value of min and a maximum sample value of max. Note that this can skew the distribution mean higher or lower than the mean you specify as the center of the normal distribution. Any samples falling outside of [min, max] will be resampled.
+*warning* - montesheet is not yet smart enough to detect invalid min,max values for the given mean and stddev and will hang trying to find samples that match. Use with care.
+
 ### uniform
 `=uniform(min, max)`
 A uniform distribution of floating point values >= min and < max.
