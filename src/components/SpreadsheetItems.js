@@ -379,7 +379,7 @@ const modalStyle = {
         <Fade in={showModal}>
           <div style={modalStyle}>
             <Typography id="transition-modal-title" variant="h6" component="h2">
-              {modalCell} {cells[modalCell] || ''}
+              {modalCell} {cells[nextCell(modalCell, 0, -1)] || ''} {cells[modalCell] || ''}
             </Typography>
               <DistributionCell modal={true} distribution={window.values[modalCell]} svgHeight={200} svgWidth={720}/>
               <Typography variant="h6">minimum: {window.values[modalCell].val().monteMin.toPrecision(4)}</Typography>

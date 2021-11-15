@@ -48,6 +48,21 @@ function DistributionCell(props) {
                 dataLabels: {
                     enabled: false,
                 },
+                annotations: {
+                    xaxis: [
+                      {
+                        x: distribution.val().monteMean,
+                        borderColor: '#775DD0',
+                        label: {
+                          style: {
+                            color: '#fff',
+                            background: '#775DD0',
+                          },
+                          text: 'mean'
+                        }
+                      }
+                    ]
+                  },
                 xaxis: {
                     tickAmount: distribution.val().sliceWidth / 5,
                     labels: {

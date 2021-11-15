@@ -243,7 +243,7 @@ export function GenericDistribution(props) {
         resampled++;
       }
     }
-    if (resampled == MAX_RESAMPLE) {
+    if (resampled === MAX_RESAMPLE) {
       return 0.0;
     }
     return val;
