@@ -4,7 +4,8 @@ import DashboardPage from "./dashboard";
 import { ThemeProvider } from "./../util/theme.js";
 
 function App(props) {
-  const [title, setTitle] = useState(JSON.parse(localStorage.getItem("montesheet"))['A1'] || "Montesheet");
+  const cachedSheet = localStorage.getItem("montesheet");
+  const [title, setTitle] = useState((cachedSheet && JSON.parse(localStorage.getItem("montesheet"))['A1']) || "Montesheet");
 
   return (
     <ThemeProvider>
