@@ -5,7 +5,7 @@ import { ThemeProvider } from "./../util/theme.js";
 
 function App(props) {
   const cachedSheet = localStorage.getItem("montesheet");
-  const [title, setTitle] = useState((cachedSheet && JSON.parse(localStorage.getItem("montesheet"))['A1']) || "Montesheet");
+  const [title, setTitle] = useState((cachedSheet && JSON.parse(localStorage.getItem("montesheet"))['A1']) || "🎲 Montesheet");
 
   return (
     <ThemeProvider>
