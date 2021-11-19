@@ -2,19 +2,19 @@ import { useState, useEffect, useMemo } from "react";
 const gaussian = require('gaussian')
 
 export function min(a) {
-  return a.val().monteMin;
+  return a.val().monteMin.toFixed(3);
 }
 
 export function max(a) {
-  return a.val().monteMax;
+  return a.val().monteMax.toFixed(3);
 }
 
 export function mean(a) {
-  return a.val().monteMean;
+  return a.val().monteMean.toFixed(3);
 }
 
 export function pn(n, a) {
-  return (a.val().monteVals[Math.floor(Number(n.substring(1)) * a.val().samples / 100)]);
+  return (a.val().monteVals[Math.floor(Number(n.substring(1)) * a.val().samples / 100)]).toFixed(3);
 }
 
 export function mul(a, b) {
